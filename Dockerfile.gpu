@@ -131,7 +131,6 @@ RUN pip3 --no-cache-dir install --upgrade ipython && \
 		wheel \
 		zmq \
 		gensim \
-		pickle \
 		&& \
 	python3 -m ipykernel.kernelspec
 
