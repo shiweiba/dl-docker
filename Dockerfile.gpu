@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y \
 		libffi-dev \
 		libfreetype6-dev \
 		libhdf5-dev \
-		libjpeg-dev \
 		liblcms2-dev \
 		libopenblas-dev \
 		liblapack-dev \
@@ -30,7 +29,6 @@ RUN apt-get update && apt-get install -y \
 		nano \
 		pkg-config \
 		python-dev \
-		software-properties-common \
 		unzip \
 		vim \
 		wget \
@@ -38,10 +36,6 @@ RUN apt-get update && apt-get install -y \
 		qt5-default \
 		libvtk6-dev \
 		zlib1g-dev \
-		libjpeg-dev \
-		libwebp-dev \
-		libpng-dev \
-		libtiff5-dev \
 		libjasper-dev \
 		libopenexr-dev \
 		libgdal-dev \
