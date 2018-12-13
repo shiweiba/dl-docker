@@ -24,10 +24,7 @@ RUN apt-get update && apt-get install -y \
 		liblcms2-dev \
 		libopenblas-dev \
 		liblapack-dev \
-		libopenjpeg5 \
-		libpng12-dev \
 		libssl-dev \
-		libtiff5-dev \
 		libwebp-dev \
 		libzmq3-dev \
 		nano \
@@ -57,8 +54,6 @@ RUN apt-get update && apt-get install -y \
 		libxvidcore-dev \
 		libx264-dev \
 		yasm \
-		libopencore-amrnb-dev \
-		libopencore-amrwb-dev \
 		libv4l-dev \
 		libxine2-dev \
 		libtbb-dev \
@@ -116,6 +111,7 @@ RUN pip3 --no-cache-dir install --upgrade ipython && \
 		wheel \
 		zmq \
 		gensim \
+		dill \
 		&& \
 	python3 -m ipykernel.kernelspec
 
