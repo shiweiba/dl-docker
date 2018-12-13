@@ -1,9 +1,9 @@
 FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
-FROM ubuntu:16.04
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 ARG THEANO_VERSION=rel-0.9.0
 
+WORKDIR "/home/VD/
+CMD ["/bin/bash"]
 #RUN echo -e "\n**********************\nNVIDIA Driver Version\n**********************\n" && \
 #	cat /proc/driver/nvidia/version && \
 #	echo -e "\n**********************\nCUDA Version\n**********************\n" && \
@@ -11,8 +11,8 @@ ARG THEANO_VERSION=rel-0.9.0
 #	echo -e "\n\nBuilding your Deep Learning Docker Image...\n"
 
 # Install some dependencies
-RUN apt-get update && apt-get install -y \
-		bc \
+RUN apt-get update \ 
+&& apt-get install -y bc \
 		build-essential \
 		cmake \
 		curl \
@@ -65,30 +65,22 @@ RUN apt-get update && apt-get install -y \
 		default-jdk \
 		doxygen \
 		sudo \
-		&& \
+		&& \ 
 	apt-get clean && \
 	apt-get autoremove && \
 	rm -rf /var/lib/apt/lists/* && \
-
-# Install useful Python packages using apt-get to avoid version incompatibilities with Tensorflow binary
-# especially numpy, scipy, skimage and sklearn (see https://github.com/tensorflow/tensorflow/issues/2034)
-RUN apt-get update && apt-get install -y \
-		python3-numpy \
-		python3-scipy \
-		python3-nose \
-		python3-h5py \
-		python3-skimage \
-		python3-matplotlib \
-		python3-pandas \
-		python3-sklearn \
-		python3-sympy \
-		&& \
-	apt-get clean && \
-	apt-get autoremove && \
+	update-alternatives --set libblas.so.3 /usr/lib/openblas-base/libblas.so.3
 
 # Install other useful Python packages using pip
 RUN pip3 --no-cache-dir install --upgrade ipython && \
 	pip3 --no-cache-dir install \
+                numpy \
+		scipy \
+		nose \
+		h5py \
+ 		matplotlib \
+		pandas \
+		sklearn \
 		Cython \
 		ipykernel \
 		jupyter \
@@ -102,7 +94,7 @@ RUN pip3 --no-cache-dir install --upgrade ipython && \
 		gensim \
 		dill \
 		&& \
-	python3 -m ipykernel.kernelspec
+	python3 -m ipykernel.kernelspec 
 
 
 # Install Theano and set up Theano config (.theanorc) for CUDA and OpenBLAS
@@ -146,5 +138,3 @@ COPY run_jupyter.sh /root/
 # Expose Ports for TensorBoard (6006), Ipython (8888)
 EXPOSE 6006 8888 
 
-WORKDIR "/home/VD/w.shi/"
-CMD ["/bin/bash"]
