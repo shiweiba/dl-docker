@@ -68,12 +68,6 @@ RUN apt-get update && apt-get install -y \
 	apt-get autoremove && \
 	rm -rf /var/lib/apt/lists/* && \
 
-# Add SNI support to Python
-RUN pip3 --no-cache-dir install \
-		pyopenssl \
-		ndg-httpsclient \
-		pyasn1
-
 # Install useful Python packages using apt-get to avoid version incompatibilities with Tensorflow binary
 # especially numpy, scipy, skimage and sklearn (see https://github.com/tensorflow/tensorflow/issues/2034)
 RUN apt-get update && apt-get install -y \
