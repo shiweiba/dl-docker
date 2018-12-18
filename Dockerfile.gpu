@@ -71,6 +71,8 @@ RUN apt-get update \
 	rm -rf /var/lib/apt/lists/* && \
 	update-alternatives --set libblas.so.3 /usr/lib/openblas-base/libblas.so.3
 
+RUN pip3 install --upgrade pip3
+
 # Install other useful Python packages using pip
 RUN pip3 --no-cache-dir install --upgrade ipython && \
 	pip3 --no-cache-dir install \
