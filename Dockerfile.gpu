@@ -128,6 +128,9 @@ ENV LUA_PATH='/root/.luarocks/share/lua/5.1/?.lua;/root/.luarocks/share/lua/5.1/
 	DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
 ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 
+# Install ssh-server
+
+RUN apt update && apt install openssh-server
 
 # Set up notebook config
 COPY jupyter_notebook_config.py /root/.jupyter/
