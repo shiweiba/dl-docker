@@ -1,18 +1,16 @@
+FROM buildpack-deps:stretch
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 
-WORKDIR "/home/VD/"
+WORKDIR /home/VD/
 CMD ["/bin/bash"]
 
-RUN echo -e "\n**********************\nNVIDIA Driver Version\n**********************\n" && \
-        cat /proc/driver/nvidia/version && \
-        echo -e "\n**********************\nCUDA Version\n**********************\n" && \
-        nvcc -V && \
-        echo -e "\n\nBuilding your Deep Learning Docker Image...\n"
+ENV TERM=xterm \
+    TZ=Europe/Berlin \
+    DEBIAN_FRONTEND=noninteractive
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
 
-FROM buildpack-deps:stretch
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
@@ -21,6 +19,10 @@ ENV LANG C.UTF-8
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		tk-dev \
 		uuid-dev \
+		wget \
+		curl \
+		libffi-dev \
+		libssl-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
@@ -64,17 +66,12 @@ RUN set -ex \
 	\
 	&& python3 --version
 
-RUN alias python3='/usr/bin/python$PYTHON_VERSION'
-RUN . ~/.bashrc
-
-RUN python3 -V
-
 # make some useful symlinks that are expected to exist
-#RUN cd /usr/local/bin \
-#	&& ln -s idle3 idle \
-#	&& ln -s pydoc3 pydoc \
-#	&& ln -s python3 python \
-#	&& ln -s python3-config python-config
+RUN cd /usr/local/bin \
+	&& ln -s idle3 idle \
+	&& ln -s pydoc3 pydoc \
+	&& ln -s python3 python \
+	&& ln -s python3-config python-config
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 19.1.1
@@ -83,7 +80,7 @@ RUN set -ex; \
 	\
 	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
 	\
-	python3 get-pip.py \
+	python get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		"pip==$PYTHON_PIP_VERSION" \
@@ -98,8 +95,7 @@ RUN set -ex; \
 		\) -exec rm -rf '{}' +; \
 	rm -f get-pip.py
 
-#CMD ["python3"]
-RUN pip --version
+
 
 # Install some dependencies
 RUN apt-get update \ 
@@ -110,18 +106,17 @@ RUN apt-get update \
 		g++ \
 		gfortran \
 		git \
-		libffi-dev \
 		libfreetype6-dev \
 		libhdf5-dev \
 		liblcms2-dev \
 		libopenblas-dev \
 		liblapack-dev \
-		libssl-dev \
 		libwebp-dev \
 		libzmq3-dev \
 		nano \
 		pkg-config \
 		python-dev \
+		python3-pip \
 		unzip \
 		vim \
 		wget \
@@ -153,10 +148,10 @@ RUN apt-get update \
 		&& \ 
 	apt-get clean && \
 	apt-get autoremove && \
-	rm -rf /var/lib/apt/lists/* && \
-	update-alternatives --set libblas.so.3 /usr/lib/openblas-base/libblas.so.3
+	rm -rf /var/lib/apt/lists/* 
+#	update-alternatives --set libblas.so.3 /usr/lib/openblas-base/libblas.so.3
 
-RUN pip --version
+RUN python3 -V
 RUN pip3 install --upgrade pip
 
 # Install other useful Python packages using pip
