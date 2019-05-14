@@ -1,6 +1,62 @@
 FROM buildpack-deps:stretch
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 
+# Install some dependencies
+RUN apt-get update \
+&& apt-get install -y bc \
+                build-essential \
+                cmake \
+                curl \
+                g++ \
+                gfortran \
+                git \
+                libfreetype6-dev \
+                libhdf5-dev \
+                liblcms2-dev \
+                libopenblas-dev \
+                liblapack-dev \
+                libwebp-dev \
+                libzmq3-dev \
+                nano \
+                pkg-config \
+                python-dev \
+                python3-pip \
+                unzip \
+                vim \
+                wget \
+                zlib1g-dev \
+                qt5-default \
+                libvtk6-dev \
+                zlib1g-dev \
+                libopenexr-dev \
+                libgdal-dev \
+                libdc1394-22-dev \
+                libavcodec-dev \
+                libavformat-dev \
+                libswscale-dev \
+                libtheora-dev \
+                libvorbis-dev \
+                libxvidcore-dev \
+                libx264-dev \
+                libsqlite3-dev \
+		libbz2-dev \
+                yasm \
+                libv4l-dev \
+                libxine2-dev \
+                libtbb-dev \
+                libeigen3-dev \
+                libffi-dev \
+                libssl-dev \
+                ant \
+                default-jdk \
+                doxygen \
+                sudo \
+                && \
+        apt-get clean && \
+        apt-get autoremove && \
+        rm -rf /var/lib/apt/lists/* && \
+        update-alternatives --set libblas.so.3 /usr/lib/openblas-base/libblas.so.3
+
 WORKDIR /home/VD/
 CMD ["/bin/bash"]
 
@@ -96,61 +152,6 @@ RUN set -ex; \
 	rm -f get-pip.py
 
 
-
-# Install some dependencies
-RUN apt-get update \ 
-&& apt-get install -y bc \
-		build-essential \
-		cmake \
-		curl \
-		g++ \
-		gfortran \
-		git \
-		libfreetype6-dev \
-		libhdf5-dev \
-		liblcms2-dev \
-		libopenblas-dev \
-		liblapack-dev \
-		libwebp-dev \
-		libzmq3-dev \
-		nano \
-		pkg-config \
-		python-dev \
-		python3-pip \
-		unzip \
-		vim \
-		wget \
-		zlib1g-dev \
-		qt5-default \
-		libvtk6-dev \
-		zlib1g-dev \
-		libopenexr-dev \
-		libgdal-dev \
-		libdc1394-22-dev \
-		libavcodec-dev \
-		libavformat-dev \
-		libswscale-dev \
-		libtheora-dev \
-		libvorbis-dev \
-		libxvidcore-dev \
-		libx264-dev \
-		yasm \
-		libv4l-dev \
-		libxine2-dev \
-		libtbb-dev \
-		libeigen3-dev \
-		libffi-dev \
-		libssl-dev \
-		ant \
-		default-jdk \
-		doxygen \
-		sudo \
-		&& \ 
-	apt-get clean && \
-	apt-get autoremove && \
-	rm -rf /var/lib/apt/lists/* 
-#	update-alternatives --set libblas.so.3 /usr/lib/openblas-base/libblas.so.3
-
 RUN python3 -V
 RUN pip3 install --upgrade pip
 
@@ -203,6 +204,12 @@ RUN pip3 --no-cache-dir install nltk
 RUN pip3 install torch
 RUN pip3 install torchvision
 
+# Install Allennlp
+RUN pip3 install allennlp
+
+# Install tensorboardX
+RUN pip3 install tensorboardX
+
 # Export the LUA evironment variables manually
 #ENV LUA_PATH='/root/.luarocks/share/lua/5.1/?.lua;/root/.luarocks/share/lua/5.1/?/init.lua;/root/torch/install/share/lua/5.1/?.lua;/root/torch/install/share/lua/5.1/?/init.lua;./?.lua;/root/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua' \
 #	LUA_CPATH='/root/.luarocks/lib/lua/5.1/?.so;/root/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so' \
@@ -212,7 +219,6 @@ RUN pip3 install torchvision
 #ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 
 # Install ssh-server
-
 RUN apt update && apt install -y openssh-server
 
 # Set up notebook config
